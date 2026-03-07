@@ -1,31 +1,37 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ShopContext } from '../context/ShopContext'
 import Title from './Title';
 import ProductItem from './ProductItem';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { ShopContext } from '../context/ShopContext'
 
 
 
 
 
+const RelatedProducts = ({ productId }) => {
 
+  const [related, setRelated] = useState([]);
+  const { backendUrl } = useContext(ShopContext);
+  
 
-const RelatedProducts = ({category,subCategory}) => {
+  useEffect(() => {
+    const fetchRelated = async () => {
+      try {
+        const response = await axios.get(
+          `${backendUrl}/api/product/related/${productId}`
+        );
 
-  const {products}=useContext(ShopContext);
-  const [related,setRelated]=useState([]);
+        if (response.data.success) {
+          setRelated(response.data.related);
+        }
+      } catch (error) {
+        toast.error("Failed to fetch related products");
+      } 
+    };
 
-  useEffect(()=>{
-  if(products.length >0){
-    let productsCopy=products.slice();
-
-    productsCopy = productsCopy.filter((item)=> item.category===category);
-    productsCopy = productsCopy.filter((item)=> item.subCategory==subCategory);
-    setRelated(productsCopy.slice(0,5));
-  }
-
-
-
-  },[products]);
+    fetchRelated();
+  }, [productId]);
 
   return (
     <div className='my-24' >

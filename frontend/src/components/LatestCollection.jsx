@@ -2,16 +2,29 @@ import React, { useContext, useEffect, useState } from 'react'
 import { ShopContext } from '../context/ShopContext'
 import Title from './Title'
 import ProductItem from './ProductItem';
+import axios from 'axios';
 
 
 const LatestCollection = () => {
 
-  const {products} =useContext(ShopContext);
+  const {backendUrl} =useContext(ShopContext);
 
   const [latestProduct,setLatestProduct]=useState([]);
   useEffect(()=>{
-    setLatestProduct(products.slice(0,10));
-  },[products]);
+  const fetchLatestProduct = async () => {
+      try {
+        const response = await axios.get(`${backendUrl}/api/product/list?sort=newest&limit=10`)
+
+        if (response.data.success) {
+          setLatestProduct(response.data.data)
+        }
+        
+      } catch (error) {
+        console.error("Latest products fetch error:", error)
+      }
+    }
+    fetchLatestProduct()
+  },[backendUrl]);
 
 
 
@@ -26,8 +39,8 @@ const LatestCollection = () => {
 
         {/* Rendering  Products */}
 
-        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gay-y-6' >
-        {latestProduct.map( (product,index)=> <ProductItem key={index} id={product._id} image={product.image} name={product.name} price={product.price}/>)}
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6' >
+        {latestProduct && latestProduct.map( (product,index)=> <ProductItem key={product._id} id={product._id} image={product.image} name={product.name} price={product.price}/>)}
         </div>
 
 

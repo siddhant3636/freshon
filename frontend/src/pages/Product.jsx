@@ -3,31 +3,39 @@ import { useParams } from 'react-router-dom'
 import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/frontend_assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
+import axios from 'axios';
+
 
 const Product = () => {
   
   const {productId}=useParams();
-  const {products,currency,addToCart }=useContext(ShopContext);
+  const { currency, addToCart, backendUrl } = useContext(ShopContext);  
   const [productData,setProductData] =useState(false);
   const [image,setImage]=useState('');
   const [size,setSize]=useState('');
 
   
-  const fetchProductData =async ()=>{
-    products.map((item)=>{
-      if(item._id===productId){
-        setProductData(item);
-        setImage(item.image[0]);
-        return null;
-      }
-        
-    })
+ const fetchProductData = async () => {
+  try {
+    const response = await axios.post(
+      backendUrl + "/api/product/single",
+      { productId }
+    );
 
-  }
+    if (response.data.success) {
+      const product = response.data.product;
+      setProductData(product);
+      setImage(product.image[0]);
+    }
+
+    } catch (error) {
+     console.log(error);
+    }
+  };
 
   useEffect(()=>{
     fetchProductData();
-  },[products,productId]);
+  },[productId]);
 
 
   return productData? (
@@ -100,7 +108,7 @@ const Product = () => {
 
       {/* Display related Products */}
       
-      <RelatedProducts category={productData.category} subCategory={productData.subCategory}/>
+      <RelatedProducts productId={productId}/>
 
 
 

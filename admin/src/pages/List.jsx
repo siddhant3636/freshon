@@ -10,10 +10,11 @@ const List = ({token}) => {
 
     const fetchList = async () => {
       try {
-        const response = await axios.get(backendUrl + "/api/product/list");
+        const response = await axios.get(backendUrl + "/api/product/listall");
+        
   
         if (response.data.success) {
-          setList(response.data.products);
+          setList(response.data.data);
         } else {
           toast.error(response.data.message);
         }
@@ -72,7 +73,7 @@ const List = ({token}) => {
         {/* -------- Product List -------- */}
       
         {
-          list.map((item, index) => (
+           list && list.map((item, index) => (
             <div
               key={index}
               className='grid grid-cols-[1fr_3fr_1fr] md:grid-cols-[1fr_3fr_1fr_1fr_1fr] items-center gap-2 py-1 px-2 border border-gray-300 text-sm'

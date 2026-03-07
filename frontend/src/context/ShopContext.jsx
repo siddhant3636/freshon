@@ -13,11 +13,10 @@ const ShopContextProvider = (props) => {
     const backendUrl=import.meta.env.VITE_BACKEND_URL;
     const [search,setSearch]=useState('');
     const [showSearch,setShowSearch]=useState(false);
-    const [cartItems,setCartitems]=useState({});
+    const [cartItems,setCartItems]=useState({});
     const [products,setProducts] = useState([]);
     const navigate= useNavigate();
-    const [token,setToken] = useState('');
-
+    const [token, setToken] = useState(localStorage.getItem("token") || "");
     const addToCart =async (itemId,size)=>{
 
         if(!size){
@@ -38,7 +37,7 @@ const ShopContextProvider = (props) => {
         cartData[itemId]={};
         cartData[itemId][size]=1;
       }
-      setCartitems(cartData);
+      setCartItems(cartData);
 
       if(token){
         try {
@@ -69,7 +68,7 @@ const ShopContextProvider = (props) => {
         
         const cartData=structuredClone(cartItems);
         cartData[itemId][size]=quantity;
-        setCartitems(cartData);
+        setCartItems(cartData);
 
         if(token){
         try {
@@ -103,7 +102,7 @@ const ShopContextProvider = (props) => {
       try {
         const response = await axios.get(backendUrl + "/api/product/list");
         if(response.data.success){
-            setProducts(response.data.products);
+            setProducts(response.data.data);
         }
         else{
             toast.error(response.data.message);
@@ -115,31 +114,31 @@ const ShopContextProvider = (props) => {
     };
 
     const getUserCart = async ( token )=>{
+        if (!token) return; // guard
         try {
+            
             const response =await axios.post(backendUrl+'/api/cart/get',{},{headers:{token}})
+           
+            setCartItems(response.data.cartData);
         } catch (error) {
         console.log(error);
         toast.error(error.message);
         }
 
     }    
-    useEffect(() => {
-      getProductsData();
-    }, [products])
-    
     useEffect(()=>{
-      if(!token && localStorage.getItem('token')){
-        setToken(localStorage.getItem('token'));
-        getUserCart();
-      }
+    getProductsData();
+    getUserCart(token);
     },[])
+    
+    
 
 
 
     const value={
     products,currency,delivery_fee,search,setSearch,showSearch,setShowSearch,
     cartItems,addToCart,getCartCount,updateQuantity,getCartAmount,navigate,backendUrl
-    ,token,setToken,setCartitems }
+    ,token,setToken,setCartItems }
     return (
         <ShopContext.Provider value={value}>
             {props.children}
