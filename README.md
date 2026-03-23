@@ -127,8 +127,10 @@ REDIS_URL=your_redis_url
 
 Create a `.env` file in the frontend:
 
+```
 VITE_API_BASE_URL=your_backend_url
 VITE_STRIPE_PUBLIC_KEY=your_public_key
+```
 
 
 ---
@@ -172,7 +174,7 @@ npm run dev
 ## 🌐 Deployment
 
 Frontend: https://freshon.siddhant36.in
-Admin:  https://admin.freshon.siddhant36.in
+Admin:  https://freshon.admin.siddhant36.in
 Backend: https://freshion.vercel.app
 
 ---
