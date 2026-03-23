@@ -179,6 +179,12 @@ Backend: https://freshion.vercel.app
 
 ---
 
+## 🔐 Security Note
+
+Admin credentials are not exposed publicly to prevent unauthorized access and data manipulation.
+
+---
+
 ## 📌 Notes
 
 * Uses cursor-based pagination instead of offset pagination for scalability
