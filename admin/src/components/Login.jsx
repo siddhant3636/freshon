@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Pattern from "./Pattern";
 import { useSearchParams } from 'react-router-dom';
 import { backendUrl } from '../App';
 import axios from 'axios';
@@ -19,15 +20,25 @@ const Login = ({setToken}) => {
      else{
         toast.error(response.data.message)
      }
-    }catch(error){
-        console.log(error);
+    }
+    catch(error){
+
+      console.log(error);
+  
+      if(error.response){
+        toast.error(error.response.data.message)
+      }
+      else{
         toast.error(error.message);
+      }
+
     }
   }
 
   return (
     <div className='min-h-screen flex items-center justify-center w-full' >
-      <div className='bg-white shadow-md rounded-lg px-8 py-6 max-w-md' >
+      <Pattern/>
+      <div className="relative z-1 bg-white shadow-md rounded-lg px-8 py-6 max-w-md">
         <h1 className='text-2xl font-bold mb-4' >Admin Panel</h1>
         <form  onSubmit={onSubmitHandler}>
             <div className='mb-3 min-w-72' >

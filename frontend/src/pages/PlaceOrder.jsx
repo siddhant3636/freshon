@@ -10,7 +10,7 @@ const PlaceOrder = () => {
   
   
   const [method,setMethod] =useState('cod');
-  const {navigate,backendUrl,token,cartItems,setCartitems,getCartAmount,delivery_fee,products}=useContext(ShopContext);
+  const {navigate,backendUrl,token,cartItems,setCartItems,getCartAmount,delivery_fee,products}=useContext(ShopContext);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -45,7 +45,7 @@ const PlaceOrder = () => {
           const {data}=await axios.post(backendUrl+'/api/order/verifyRazorpay',response,{headers:{token}})
           if(data.success){
             navigate('/orders')
-            setCartitems({});
+            setCartItems({});
           }
         } catch (error) {
           console.log(error);
@@ -97,7 +97,7 @@ const PlaceOrder = () => {
         case 'cod':
           const response = await axios.post(backendUrl+'/api/order/place',orderData,{headers:{token}})
           if(response.data.success){
-            setCartitems({});
+            setCartItems({});
             navigate('/orders')
           }else{
             toast.error(response.data.message)
@@ -121,14 +121,6 @@ const PlaceOrder = () => {
           {
             initPay(responseRazorpay.data.order);
           }
-
-
-
-
-
-
-
-
 
         break;
         default:

@@ -50,11 +50,10 @@ const placeOrder = async (req, res, next) => {
 const allOrders = async (req, res, next) => {
 
     try {
-        
       const orders= await orderModel.find({});
       res.json({success:true,orders});
     } catch (error) {
-       next(error);
+      next(error);
     }
 }
 
@@ -69,7 +68,7 @@ const userOrders = async (req, res, next) => {
       res.json({success:true,orders});
       
     } catch (error) {
-       next(error);
+      next(error);
         
     }
 }

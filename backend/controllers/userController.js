@@ -3,23 +3,27 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 
-const createToken = (id) => {
+const createToken = (user) => {
   return jwt.sign(
-    { id },
+    { 
+      id: user._id,
+      role: user.role
+    },
     process.env.JWT_SECRET,
     { expiresIn: "1d" }
   );
-}
+};
 
 
 
 // Route for user login
 const loginUser = async (req, res,next) => {
   try {
-
+    
     const { email, password } = req.body;
 
     const user = await userModel.findOne({ email });
+    
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
       const error = new Error("Invalid credentials");
@@ -27,7 +31,7 @@ const loginUser = async (req, res,next) => {
       throw error;
     }
    
-    const token = createToken(user._id);
+    const token = createToken(user);
     res.status(200).json({ success: true, token });   
 
   } catch (error) {
@@ -73,7 +77,7 @@ const registerUser = async (req, res ,next ) => {
       password: hashedPassword
     });
 
-    const token = createToken(user._id);
+    const token = createToken(user);
 
     res.status(201).json({ success: true, token });
   } catch (error) {
@@ -85,27 +89,31 @@ const registerUser = async (req, res ,next ) => {
 // Route for admin login
 const adminLogin = async (req, res,next) => {
   try {
-
+    
     const { email, password } = req.body;
 
-    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+    const user = await userModel.findOne({ email });
+    
 
-      const token = jwt.sign(
-        { role: "admin" },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" }
-      );
-
-      res.status(200).json({ success: true, token });
-    } else {
-      
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       const error = new Error("Invalid credentials");
       error.statusCode = 401;
       throw error;
     }
+   
+    if (user.role !== "admin") {
+      
+    return res.status(403).json({success:false,
+      message: "Access denied. Admin only"
+    });
+    }
+     
+   
+    const token = createToken(user);
+    res.status(200).json({ success: true, token });   
 
   } catch (error) {
-    next(error);
+    next(error)
   }
 }
 

@@ -13,7 +13,7 @@ const productSchema = new mongoose.Schema({
 
 // Indexes for performance
 productSchema.index({ category: 1, subCategory: 1 });
-productSchema.index({ price: 1 });
+productSchema.index({ price: 1, _id: 1 });
 productSchema.index({ createdAt: -1 });
 productSchema.index({ name: "text" });
 

@@ -7,8 +7,8 @@ import userRouter from './routes/userRoute.js';
 import productRouter from './routes/productRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
-import rateLimit from "express-rate-limit";
 import errorHandler from "./middleware/errorHandler.js";
+import redisRateLimiter from "./middleware/rateLimit.js";
 
 // App Config 
 const app= express();
@@ -16,26 +16,17 @@ const port =process.env.PORT || 4000 ;
 connectDB();
 connectCloudinary();
 
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    message: "Too many requests, please try again later."
-  }
-});
 
 
-app.set("trust proxy", 1);
+
+
 //middlewares
 app.use(express.json());
 app.use(cors());
 
 // api endpoints
 
-app.use("/api/", apiLimiter); //Rate Limit ( 100/15  mins ) 
+app.use("/api/", redisRateLimiter); //Rate Limit ( 100/15  mins ) 
 
 app.use('/api/user',userRouter);
 app.use('/api/product',productRouter);
