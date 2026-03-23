@@ -22,7 +22,7 @@ const Orders = ({ token }) => {
       const response = await axios.post(
         backendUrl + "/api/order/list",
         {},
-        { headers: { token } }
+        { headers: {Authorization: `Bearer ${token}`} }
       )
 
       if (response.data.success) {
@@ -35,14 +35,14 @@ const Orders = ({ token }) => {
       toast.error(error.message)
     }
   }
-   const statusHandler = async (orderId) => {
+   const statusHandler = async (event,orderId) => {
 
     try {
 
       const response = await axios.post(
         backendUrl + "/api/order/status",
         {orderId,status:event.target.value},
-        { headers: { token } }
+        { headers: {Authorization: `Bearer ${token}`} }
       )
 
       if (response.data.success) {
@@ -105,7 +105,7 @@ const Orders = ({ token }) => {
             </div>
 
             <p className='text-sm sm:text-[15px]' >{currency}{order.amount}</p> 
-            <select  onChange={()=>statusHandler( order._id)} value={order.status} className='p-2 font-semibold self-start' >
+            <select  onChange={(e) => statusHandler(e, order._id)} value={order.status} className='p-2 font-semibold self-start' >
               <option value="Order Placed">Order Placed</option>
               <option value="Packing">Packing</option>
               <option value="Shipped">Shipped</option>Shipped

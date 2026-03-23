@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-
 export const ShopContext =createContext();
 
 const ShopContextProvider = (props) => {
@@ -41,7 +40,7 @@ const ShopContextProvider = (props) => {
 
       if(token){
         try {
-            await axios.post(backendUrl+'/api/cart/add',{itemId,size},{headers:{token}})
+            await axios.post(backendUrl+'/api/cart/add',{itemId,size},{headers: {Authorization: `Bearer ${token}`}})
         } catch (error) {
             console.log(error);
             toast.error(error.message);
@@ -72,7 +71,7 @@ const ShopContextProvider = (props) => {
 
         if(token){
         try {
-            await axios.post(backendUrl+'/api/cart/update',{itemId,size,quantity},{headers:{token}})
+            await axios.post(backendUrl+'/api/cart/update',{itemId,size,quantity},{headers: {Authorization: `Bearer ${token}`}})
         } catch (error) {
             console.log(error);
             toast.error(error.message);
@@ -117,7 +116,9 @@ const ShopContextProvider = (props) => {
         if (!token) return; // guard
         try {
             
-            const response =await axios.post(backendUrl+'/api/cart/get',{},{headers:{token}})
+            const response =await axios.post(backendUrl+'/api/cart/get',{},{headers: {
+  Authorization: `Bearer ${token}`
+}})
            
             setCartItems(response.data.cartData);
         } catch (error) {

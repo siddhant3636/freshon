@@ -18,12 +18,22 @@ connectCloudinary();
 
 
 
-
+const allowedOrigins = [
+  "https://freshon.siddhant36.in",     //  Custom domain
+  "https://freshion-frontend.vercel.app",        //  Vercel production URL
+  "https://freshon.admin.siddhant36.in", //  Custom domain
+  "https://freshion-admin.vercel.app",  //  Admin panel 
+  "http://localhost:5173",              // Local development
+  "http://localhost:5174"               // Admin local dev
+];
 
 //middlewares
 app.use(express.json());
-app.use(cors());
-
+app.use(cors({
+  origin: allowedOrigins, 
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 // api endpoints
 
 app.use("/api/", redisRateLimiter); //Rate Limit ( 100/15  mins ) 
