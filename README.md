@@ -28,12 +28,12 @@ A full-stack e-commerce application built with a modern MERN architecture, featu
 
 * Redis caching with:
 
-* ID-list based caching for product listing
-* Per-product caching
-* Redis pipeline for batch fetching
-* Cursor-based pagination (no duplicates, stable sorting)
-* Rate limiting for API protection
-* Centralized error handling
+  - ID-list based caching for product listing
+  - Per-product caching
+  - Redis pipeline for batch fetching
+  - Cursor-based pagination (no duplicates, stable sorting)
+  - Rate limiting for API protection
+  - Centralized error handling
 
 ---
 
@@ -67,7 +67,7 @@ A full-stack e-commerce application built with a modern MERN architecture, featu
 ## 📁 Project Structure
 
 ```
-freshion/
+freshon/
 │
 ├── admin/         # Admin dashboard (React + Vite)
 ├── frontend/      # User frontend (React + Vite)
@@ -125,6 +125,12 @@ RAZORPAY_KEY_SECRET=your_secret
 REDIS_URL=your_redis_url
 ```
 
+Create a `.env` file in the frontend:
+
+VITE_API_BASE_URL=your_backend_url
+VITE_STRIPE_PUBLIC_KEY=your_public_key
+
+
 ---
 
 ## 🧪 Run Locally
@@ -165,8 +171,9 @@ npm run dev
 
 ## 🌐 Deployment
 
-Frontend: https://freshion.vercel.app
-(Backend and Admin can be deployed on services like Render, Railway, etc.)
+Frontend: https://freshon.siddhant36.in
+Admin:  https://admin.freshon.siddhant36.in
+Backend: https://freshion.vercel.app
 
 ---
 
@@ -180,10 +187,33 @@ Frontend: https://freshion.vercel.app
 
 ## 📷 Screenshots
 
-(Add your UI screenshots here for better presentation)
+### 🛍️ Product Collection Page
+Product listing with filtering, sorting, and cursor-based pagination. Backend optimized using Redis caching and pipeline batching.
+
+<p align="center">
+  <img src="./images/collection.png" width="70%" />
+</p>
 
 ---
 
+### 🔐 Admin Panel Login
+Secure admin authentication with role-based access control. Only authorized users can access product and order management features.
+
+<p align="center">
+  <img src="./images/admin.png" width="50%" />
+</p>
+
+---
+
+
+## 🧠 Challenges & Learnings
+
+- Implemented cursor-based pagination to avoid duplication issues in dynamic datasets
+- Designed Redis caching strategy using ID-list + per-entity caching
+- Used Redis pipeline to reduce multiple network round trips
+- Handled authentication securely using JWT and standardized Bearer tokens
+- Managed CORS and cross-origin issues across multiple deployed domains
+
 ## 📬 Contact
 
-Feel free to reach out if you have suggestions or feedback.
+For queries or collaboration, feel free to connect or raise an issue in this repository.
