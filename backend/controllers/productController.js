@@ -4,6 +4,7 @@ import redis from "../config/redis.js";
 import productModel from "../models/productModel.js";
 import { buildProductQuery } from "../utils/buildProductQuery.js";
 import { buildSortOption } from "../utils/buildSortOption.js";
+import { mergeSearchFilters } from "../utils/mergeSearchFilters.js";
 
 const PRODUCT_TTL = 60 * 60; // 1 hour
 const LIST_TTL = 5 * 60; // 5 minutes
@@ -193,7 +194,8 @@ const listProducts = async (req, res, next) => {
     const limitNum = Math.max(1, Math.min(100, Number(limit)));
 
     //  1. FILTER KEY (NO cursor)
-    const baseQuery = buildProductQuery(req.query);
+    const mergedQuery = await mergeSearchFilters(req.query);
+    const baseQuery = buildProductQuery(mergedQuery);    
     const sortOption = buildSortOption(sort);
 
     const listKey =

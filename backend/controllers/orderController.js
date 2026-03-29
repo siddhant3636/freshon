@@ -22,7 +22,9 @@ const razorpayInstance = new razorpay({
 const placeOrder = async (req, res, next) => {
   try {
 
-    const { userId, items, amount, address } = req.body;
+    const { items, amount, address } = req.body;
+    const userId =req.user.id;
+
 
     const orderData = {
       userId,
@@ -61,7 +63,8 @@ const allOrders = async (req, res, next) => {
 // User Orders data for Frontend
 const userOrders = async (req, res, next) => {
     try {
-      const { userId } = req.body;
+      const userId =req.user.id;
+
   
       const orders= (await orderModel.find({userId}).sort({_id:-1}));
   
@@ -79,7 +82,8 @@ const placeOrderStripe = async (req, res, next) => {
   
     try {
 
-    const { userId, items, amount, address } = req.body;
+    const { items, amount, address } = req.body;
+    const userId =req.user.id;
     const {origin} = req.headers;
 
     const orderData = {
@@ -137,7 +141,8 @@ const placeOrderStripe = async (req, res, next) => {
 
 // Verify Stripe
 const verifyStripe = async (req, res, next) => {
-  const { orderId, success, userId } = req.body;
+  const { orderId, success } = req.body;
+  const userId =req.user.id;
 
   try {
     if (success === "true") {
@@ -158,7 +163,8 @@ const verifyStripe = async (req, res, next) => {
 // Placing Orders using Razorpay Method
 const placeOrderRazorpay = async (req, res, next) => {
    try {
-    const { userId, items, amount, address } = req.body;
+    const {  items, amount, address } = req.body;
+    const userId =req.user.id;
 
     const orderData = {
       userId,
@@ -195,7 +201,8 @@ const placeOrderRazorpay = async (req, res, next) => {
 // Verify Razorpay
 const verifyRazorpay = async (req, res, next) => {
   try {
-    const { userId ,razorpay_order_id }=req.body;
+    const { razorpay_order_id }=req.body;
+    const userId =req.user.id;
     const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
     
     if(orderInfo.status ==='paid')
