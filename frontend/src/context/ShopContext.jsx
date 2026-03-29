@@ -114,11 +114,10 @@ const ShopContextProvider = (props) => {
 
     const getUserCart = async ( token )=>{
         if (!token) return; // guard
+        console.log("token being sent:", token);
         try {
             
-            const response =await axios.post(backendUrl+'/api/cart/get',{},{headers: {
-  Authorization: `Bearer ${token}`
-}})
+        const response =await axios.post(backendUrl+'/api/cart/get',{},{headers: {Authorization: `Bearer ${token}`}})
            
             setCartItems(response.data.cartData);
         } catch (error) {

@@ -8,17 +8,31 @@ import { toast } from 'react-toastify';
 
 const Collection = () => {
 
-  const { backendUrl } = useContext(ShopContext);
+  const { backendUrl ,search} = useContext(ShopContext);
   const [showFilter, setShowFilters] = useState(false);
 
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState('relevant');
-
+  
   const [loading, setLoading] = useState(false);
   const [nextCursor, setNextCursor] = useState(null);
   const [totalCount, setTotalCount] = useState(0);
+  
+  //Debounce Search
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setDebouncedSearch(search);
+  }, 500); // 500ms delay
+
+  return () => clearTimeout(timer);
+}, [search]);
+
+
+
 
   // -------------------------
   // Toggle Filters
@@ -55,6 +69,7 @@ const Collection = () => {
       const response = await axios.get(`${backendUrl}/api/product/list`, {
       params: {
         limit: 8,
+        ...(debouncedSearch && { q: debouncedSearch }),
         ...(category.length && { category: category.join(",") }),
         ...(subCategory.length && { subCategory: subCategory.join(",") }),
         ...(sortType !== "relevant" && { sort: sortType }),
@@ -82,11 +97,12 @@ const Collection = () => {
   // Refetch when filters change
   // -------------------------
 
+
   useEffect(() => {
   setProducts([]);          
   setNextCursor(null);
   fetchProducts(null, true);
-  }, [category, subCategory, sortType]);
+  }, [category, subCategory, sortType,debouncedSearch]);
 
   return (
 <div className='flex flex-col sm:flex-row gap-6 sm:gap-12 pt-10 px-4 md:px-0'>
